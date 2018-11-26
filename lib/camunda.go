@@ -208,6 +208,9 @@ func setPayloadParameter(msg *messages.BpmnMsg, parameter map[string]interface{}
 
 func ExecuteCamundaTask(task messages.CamundaTask) {
 	log.Println("Get new Task: ", task)
+	if task.Error != "" {
+		log.Println("WARNING: existing failure in camunda task", task.Error)
+	}
 	if util.Config.QosStrategy == "<=" && task.Retries == 1 {
 		CamundaError(task, "communication timeout")
 		return

@@ -36,6 +36,7 @@ type CamundaTask struct {
 	ProcessInstanceId   string                     `json:"processInstanceId"`
 	ProcessDefinitionId string                     `json:"processDefinitionId"`
 	TenantId            string                     `json:"tenantId"`
+	Error				string					   `json:"errorMessage"`
 }
 
 type CamundaTopic struct {

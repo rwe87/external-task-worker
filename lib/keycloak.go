@@ -43,7 +43,7 @@ func getUserRoles(user string) (roles []string, err error) {
 	roleMappings := []RoleMapping{}
 	err = clientToken.GetJSON(util.Config.AuthEndpoint+"/auth/admin/realms/master/users/"+user+"/role-mappings/realm", &roleMappings)
 	if err != nil {
-		log.Println("ERROR: getUserRoles::GetJSON()", err, util.Config.AuthEndpoint+"/auth/admin/realms/master/users/"+user+"/role-mappings/realm")
+		log.Println("ERROR: getUserRoles::GetJSON()", err, util.Config.AuthEndpoint+"/auth/admin/realms/master/users/"+user+"/role-mappings/realm", string(clientToken))
 		return roles, err
 	}
 	for _, role := range roleMappings {

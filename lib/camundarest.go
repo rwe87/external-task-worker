@@ -62,8 +62,13 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 	}
 	completeRequest := messages.CamundaCompleteRequest{WorkerId: workerId, Variables: variables}
 	pl := ""
-	err, pl, _ = request.Post(util.Config.CamundaUrl+"/external-task/"+taskId+"/complete", completeRequest, nil)
-	log.Println("complete camunda task: ", completeRequest, pl)
+	var code int
+	err, pl, code = request.Post(util.Config.CamundaUrl+"/external-task/"+taskId+"/complete", completeRequest, nil)
+	if code == 204 || code == 200 {
+		log.Println("complete camunda task: ", completeRequest, pl)
+	}else{
+		CamundaError(messages.CamundaTask{Id:taskId}, pl)
+	}
 	return
 }
 

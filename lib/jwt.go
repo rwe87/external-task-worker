@@ -78,7 +78,6 @@ func (this JwtImpersonate) Get(url string) (resp *http.Response, err error) {
 	}
 	req.Header.Set("Authorization", string(this))
 	resp, err = http.DefaultClient.Do(req)
-
 	if err == nil && resp.StatusCode == 401 {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
