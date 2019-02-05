@@ -222,16 +222,16 @@ func ExecuteCamundaTask(task messages.CamundaTask) {
 		return
 	}
 
-	protocolTopic, message, err := createKafkaCommandMessage(request, task)
+	protocolTopic, message, device, service, err := createCommandMessage(request, task)
 	if err != nil {
-		log.Println("error on ExecuteCamundaTask createKafkaCommandMessage", err)
+		log.Println("error on ExecuteCamundaTask createCommandMessage", err)
 		CamundaError(task, err.Error())
 		return
 	}
 	if util.Config.QosStrategy == "<=" && task.Retries != 1 {
 		SetCamundaRetry(task.Id)
 	}
-	Produce(protocolTopic, message)
+	Produce(protocolTopic, message, device, service)
 }
 
 type Envelope struct {
@@ -240,17 +240,17 @@ type Envelope struct {
 	Value     interface{} `json:"value"`
 }
 
-func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTask) (protocolTopic string, message string, err error) {
+func createCommandMessage(request messages.BpmnMsg, task messages.CamundaTask) (protocolTopic string, message []byte, deviceId string, serviceId string,err error) {
 	instance, _, service, err := getDeviceInfo(request.InstanceId, request.ServiceId, task.TenantId)
 	if err != nil {
-		log.Println("error on createKafkaCommandMessage getDeviceInfo: ", err)
+		log.Println("error on createCommandMessage getDeviceInfo: ", err)
 		err = errors.New("unable to find device or service")
 		return
 	}
 
 	value, err := createMessageForProtocolHandler(instance, service, request.Inputs, task)
 	if err != nil {
-		log.Println("ERROR: on createKafkaCommandMessage createMessageForProtocolHandler(): ", err)
+		log.Println("ERROR: on createCommandMessage createMessageForProtocolHandler(): ", err)
 		err = errors.New("internal format error (inconsistent data?) (time: " + time.Now().String() + ")")
 		return
 	}
@@ -262,7 +262,7 @@ func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTa
 		return
 	}
 	msg, err := json.Marshal(Envelope{ServiceId: service.Id, DeviceId: instance.Id, Value: value})
-	return protocolTopic, string(msg), err
+	return protocolTopic, msg, instance.Id, service.Id, err
 }
 
 func createMessageForProtocolHandler(instance model.DeviceInstance, service model.Service, inputs map[string]interface{}, task messages.CamundaTask) (result messages.ProtocolMsg, err error) {

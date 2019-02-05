@@ -5,18 +5,15 @@
     "CamundaFetchLockDuration": 10000,
     "CamundaUrl": "http://camunda:8082/engine-rest",
     "CamundaTopic": "execute_in_dose",
-    "ZookeeperUrl": "zk:2181",
-    "KafkaConsumerGroup":"camundaworker",
     "ResponseTopic": "response",
-    "OnChangeTopic": "event",
     "QosStrategy": "<=",
-    "SaramaLog": "false",
-    "FatalKafkaErrors": "true",
     "AuthExpirationTimeBuffer": 2,
     "AuthEndpoint": "http://keycloak:8080",
     "AuthClientId": "camundaworker",
     "AuthClientSecret": "",
     "JwtExpiration": 30,
     "JwtIssuer":   "camundaworker",
-    "PermissionsUrl": "http://permissionsearch:8080"
+    "PermissionsUrl": "http://permissionsearch:8080",
+    "ConsumerName":"camundaworker",
+    "AmqpUrl": "amqp://guest:guest@rabbitmq:5672/"
 }

@@ -24,13 +24,11 @@ import (
 
 	"syscall"
 
-	"github.com/Shopify/sarama"
 	"github.com/SmartEnergyPlatform/external-task-worker/lib"
 	"github.com/SmartEnergyPlatform/external-task-worker/util"
 )
 
 func main() {
-
 	configLocation := flag.String("config", "config.json", "configuration file")
 	flag.Parse()
 
@@ -39,15 +37,20 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if util.Config.SaramaLog == "true" {
-		sarama.Logger = log.New(os.Stderr, "[Sarama] ", log.LstdFlags)
-	}
-
 	go lib.CamundaWorker()
-	go lib.InitConsumer()
+	err = lib.InitProducer()
+	if err != nil {
+		log.Fatal(err)
+	}
+	err = lib.InitConsumer()
+	if err != nil {
+		log.Fatal()
+	}
 
 	shutdown := make(chan os.Signal, 1)
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 	sig := <-shutdown
 	log.Println("received shutdown signal", sig)
+	lib.CloseConsumer()
+	lib.CloseProducer()
 }
