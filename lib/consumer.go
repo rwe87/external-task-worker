@@ -27,6 +27,10 @@ func InitConsumer() (err error) {
 	consumer, err = iot_broker_client.NewConsumer(util.Config.AmqpUrl, util.Config.ConsumerName, util.Config.ResponseTopic, false, func(msg []byte) error {
 		return CompleteCamundaTask(string(msg))
 	})
+	if err != nil {
+		return err
+	}
+	err = consumer.BindAll()
 	return
 }
 
