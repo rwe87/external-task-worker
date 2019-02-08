@@ -17,14 +17,14 @@
 package lib
 
 import (
-	"github.com/SENERGY-Platform/iot-broker-client"
+	"github.com/SENERGY-Platform/iot-broker-client-lib"
 	"github.com/SmartEnergyPlatform/external-task-worker/util"
 )
 
-var consumer *iot_broker_client.Consumer
+var consumer *iot_broker_client_lib.Consumer
 
 func InitConsumer() (err error) {
-	consumer, err = iot_broker_client.NewConsumer(util.Config.AmqpUrl, util.Config.ConsumerName, util.Config.ResponseTopic, false, func(msg []byte) error {
+	consumer, err = iot_broker_client_lib.NewConsumer(util.Config.AmqpUrl, util.Config.ConsumerName, util.Config.ResponseTopic, false, func(msg []byte) error {
 		return CompleteCamundaTask(string(msg))
 	})
 	if err != nil {

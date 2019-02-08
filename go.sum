@@ -4,8 +4,8 @@ github.com/Microsoft/go-winio v0.4.8 h1:1TfLnrRLKLEVn9t+5FpZqiEJkzpm1QDVs4rZZlUp
 github.com/Microsoft/go-winio v0.4.8/go.mod h1:VhR8bwka0BXejwEJY73c50VrPtXAaKcyvVC4A4RozmA=
 github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 h1:TngWCqHvy9oXAN6lEVMRuU21PR1EtLVZJmdB18Gu3Rw=
 github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5/go.mod h1:lmUJ/7eu/Q8D7ML55dXQrVaamCz2vxCfdQBasLZfHKk=
-github.com/SENERGY-Platform/iot-broker-client v0.0.0-20190204142131-b3a8bcc95f2b h1:iL1mLhWuE5y2DgiikjesX3gWWKg8XKbHpyHybwmrGdI=
-github.com/SENERGY-Platform/iot-broker-client v0.0.0-20190204142131-b3a8bcc95f2b/go.mod h1:nZclPisFICTtN2RqbzSIMSSaF3JvcFMaGMfFRmMHCec=
+github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190208074750-ac832f94c68b h1:kubD1Y00B8hyanhLWaHaDPepJWHDQAeL1ULmUwJ/a5w=
+github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190208074750-ac832f94c68b/go.mod h1:c2+PT+rqvtKyVr/D27uHYJnvwUE4bljC/hjBTB0YVX8=
 github.com/SmartEnergyPlatform/amqp-wrapper-lib v0.0.0-20181018071408-32e07d9d89bb h1:wkigEsq8SRUzIbsA5gAWhZ7a1CECn1vnhpElcoA6evE=
 github.com/SmartEnergyPlatform/amqp-wrapper-lib v0.0.0-20181018071408-32e07d9d89bb/go.mod h1:X1U6gbRInWfBsFKgb/owoLNZp2NSx6vLnUPbw6bjEN4=
 github.com/SmartEnergyPlatform/formatter-lib v0.0.0-20181018082014-b45c9317bb5e h1:zb96w1DbEUogL2IDxFJ0GuHN2ukO1la1iWTnK6ld/4Q=

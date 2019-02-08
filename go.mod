@@ -1,7 +1,7 @@
 module github.com/SmartEnergyPlatform/external-task-worker
 
 require (
-	github.com/SENERGY-Platform/iot-broker-client v0.0.0-20190204142131-b3a8bcc95f2b
+	github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190208074750-ac832f94c68b
 	github.com/SmartEnergyPlatform/formatter-lib v0.0.0-20181018082014-b45c9317bb5e
 	github.com/SmartEnergyPlatform/iot-device-repository v0.0.0-20181018081528-7297409a5f9f
 	github.com/SmartEnergyPlatform/util v0.0.0-20181018070938-b26ca656886c
