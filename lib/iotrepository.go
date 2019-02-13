@@ -21,7 +21,7 @@ import (
 
 	"errors"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 	"github.com/SmartEnergyPlatform/iot-device-repository/lib/model"
 )
 

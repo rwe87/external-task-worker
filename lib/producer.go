@@ -18,7 +18,7 @@ package lib
 
 import (
 	"github.com/SENERGY-Platform/iot-broker-client-lib"
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 )
 
 var producer *iot_broker_client_lib.Publisher
