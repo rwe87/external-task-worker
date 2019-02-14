@@ -8,6 +8,8 @@ github.com/SENERGY-Platform/external-task-worker v0.0.0-20181126110006-a129a73d8
 github.com/SENERGY-Platform/external-task-worker v0.0.0-20181126110006-a129a73d8388/go.mod h1:9imeluZEFSUlnAiRSNG53Mn+/r5tFOy55jqiP9zhado=
 github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190208074750-ac832f94c68b h1:kubD1Y00B8hyanhLWaHaDPepJWHDQAeL1ULmUwJ/a5w=
 github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190208074750-ac832f94c68b/go.mod h1:c2+PT+rqvtKyVr/D27uHYJnvwUE4bljC/hjBTB0YVX8=
+github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190214075228-2ea6e40498cd h1:VObx8MESMh1GAtYb3tGAwtoWELS06O3xz6Kj9QHchyc=
+github.com/SENERGY-Platform/iot-broker-client-lib v0.0.0-20190214075228-2ea6e40498cd/go.mod h1:c2+PT+rqvtKyVr/D27uHYJnvwUE4bljC/hjBTB0YVX8=
 github.com/Shopify/sarama v1.15.0 h1:v/Q3THMtunYfvKhbFfhegInfoW70HoNgsOdmuvFN5Qg=
 github.com/Shopify/sarama v1.15.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/SmartEnergyPlatform/amqp-wrapper-lib v0.0.0-20181018071408-32e07d9d89bb h1:wkigEsq8SRUzIbsA5gAWhZ7a1CECn1vnhpElcoA6evE=

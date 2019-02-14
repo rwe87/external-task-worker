@@ -46,6 +46,7 @@ type ConfigStruct struct {
 	JwtIssuer                string
 	PermissionsUrl           string
 	AmqpUrl					 string
+	AmqpPrefetchCount		 int64
 }
 type ConfigType *ConfigStruct
 

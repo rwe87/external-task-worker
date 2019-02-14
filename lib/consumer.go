@@ -19,18 +19,24 @@ package lib
 import (
 	"github.com/SENERGY-Platform/iot-broker-client-lib"
 	"github.com/SENERGY-Platform/external-task-worker/util"
+	"log"
 )
 
 var consumer *iot_broker_client_lib.Consumer
 
 func InitConsumer() (err error) {
-	consumer, err = iot_broker_client_lib.NewConsumer(util.Config.AmqpUrl, util.Config.ConsumerName, util.Config.ResponseTopic, false, func(msg []byte) error {
+	consumer, err = iot_broker_client_lib.NewConsumer(util.Config.AmqpUrl, util.Config.ConsumerName, util.Config.ResponseTopic, false, int(util.Config.AmqpPrefetchCount), func(msg []byte) error {
 		return CompleteCamundaTask(string(msg))
 	})
 	if err != nil {
+		log.Println("ERROR: unable to init amqp connection", err)
 		return err
 	}
 	err = consumer.BindAll()
+	if err != nil {
+		log.Println("ERROR: unable to bind devices to consumer", err)
+		return err
+	}
 	return
 }
 

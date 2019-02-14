@@ -15,5 +15,6 @@
     "JwtIssuer":   "camundaworker",
     "PermissionsUrl": "http://permissionsearch:8080",
     "ConsumerName":"camundaworker",
-    "AmqpUrl": "amqp://guest:guest@rabbitmq:5672/"
+    "AmqpUrl": "amqp://guest:guest@rabbitmq:5672/",
+    "AmqpPrefetchCount": 10
 }
