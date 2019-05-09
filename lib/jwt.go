@@ -83,9 +83,6 @@ func (this JwtImpersonate) Get(url string) (resp *http.Response, err error) {
 		Timeout: 10 * time.Second,
 	}
 	resp, err = client.Do(req)
-	if err == nil {
-		defer resp.Body.Close()
-	}
 	if err == nil && resp.StatusCode == 401 {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
