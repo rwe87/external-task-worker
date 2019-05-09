@@ -247,7 +247,6 @@ func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTa
 		err = errors.New("unable to find device or service")
 		return
 	}
-
 	value, err := createMessageForProtocolHandler(instance, service, request.Inputs, task)
 	if err != nil {
 		log.Println("ERROR: on createKafkaCommandMessage createMessageForProtocolHandler(): ", err)

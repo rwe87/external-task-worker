@@ -42,8 +42,10 @@ func (this JwtImpersonate) Post(url string, contentType string, body io.Reader) 
 	req.Header.Set("Authorization", string(this))
 	req.Header.Set("Content-Type", contentType)
 
-	resp, err = http.DefaultClient.Do(req)
-
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	resp, err = client.Do(req)
 	if err == nil && resp.StatusCode == 401 {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
@@ -77,11 +79,16 @@ func (this JwtImpersonate) Get(url string) (resp *http.Response, err error) {
 		return nil, err
 	}
 	req.Header.Set("Authorization", string(this))
-	resp, err = http.DefaultClient.Do(req)
+	client := &http.Client{
+		Timeout: 10 * time.Second,
+	}
+	resp, err = client.Do(req)
+	if err == nil {
+		defer resp.Body.Close()
+	}
 	if err == nil && resp.StatusCode == 401 {
 		buf := new(bytes.Buffer)
 		buf.ReadFrom(resp.Body)
-		resp.Body.Close()
 		log.Println(buf.String())
 		err = errors.New("access denied")
 	}

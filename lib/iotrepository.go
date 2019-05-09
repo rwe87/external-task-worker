@@ -42,6 +42,8 @@ func CheckExecutionAccess(token JwtImpersonate, resource string) (err error) {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
+
 	if resp.StatusCode != 200 {
 		return errors.New("user may not execute events for the resource")
 	}
