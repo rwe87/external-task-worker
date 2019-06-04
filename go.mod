@@ -6,6 +6,8 @@ require (
 	github.com/SmartEnergyPlatform/iot-device-repository v0.0.0-20181018081528-7297409a5f9f
 	github.com/SmartEnergyPlatform/util v0.0.0-20181018070938-b26ca656886c
 	github.com/cbroglie/mustache v1.0.1
+	github.com/cespare/xxhash v1.1.0 // indirect
+	github.com/coocood/freecache v1.1.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/dgrijalva/jwt-go v3.1.0+incompatible
 	github.com/eapache/go-resiliency v1.1.0

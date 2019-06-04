@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 InfAI (CC SES)
+ * Copyright 2019 InfAI (CC SES)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -241,7 +241,7 @@ type Envelope struct {
 }
 
 func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTask) (protocolTopic string, message string, err error) {
-	instance, _, service, err := getDeviceInfo(request.InstanceId, request.ServiceId, task.TenantId)
+	instance, service, err := GetDeviceInfo(request.InstanceId, request.ServiceId, task.TenantId)
 	if err != nil {
 		log.Println("error on createKafkaCommandMessage getDeviceInfo: ", err)
 		err = errors.New("unable to find device or service")
@@ -354,17 +354,3 @@ func createBpmnResponse(nrMsg messages.ProtocolMsg) (result messages.BpmnMsg, er
 	return
 }
 
-func getDeviceInfo(instanceId string, serviceId string, user string) (instance model.DeviceInstance, devicetype model.DeviceType, service model.Service, err error) {
-	token, err := GetUserToken(user)
-	if err != nil {
-		log.Println("error on user token generation: ", err)
-		return instance, devicetype, service, err
-	}
-	instance, err = GetDeviceInstance(token, instanceId)
-	if err != nil {
-		log.Println("error on getDeviceInfo GetDeviceInstance")
-		return
-	}
-	service, err = GetDeviceService(token, serviceId)
-	return
-}
