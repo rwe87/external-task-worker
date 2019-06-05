@@ -240,6 +240,16 @@ type Envelope struct {
 	Value     interface{} `json:"value"`
 }
 
+func (envelope Envelope) Validate() error {
+	if envelope.DeviceId == "" {
+		return errors.New("missing device id")
+	}
+	if envelope.ServiceId == "" {
+		return errors.New("missing service id")
+	}
+	return nil
+}
+
 func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTask) (protocolTopic string, message string, err error) {
 	instance, service, err := GetDeviceInfo(request.InstanceId, request.ServiceId, task.TenantId)
 	if err != nil {
@@ -255,12 +265,16 @@ func createKafkaCommandMessage(request messages.BpmnMsg, task messages.CamundaTa
 	}
 	protocolTopic = service.Protocol.ProtocolHandlerUrl
 	if protocolTopic == "" {
-		log.Println("ERROR: empty protocoll topic")
+		log.Println("ERROR: empty protocol topic")
 		log.Println("DEBUG: ", instance, service)
-		err = errors.New("empty protocoll topic")
+		err = errors.New("empty protocol topic")
 		return
 	}
-	msg, err := json.Marshal(Envelope{ServiceId: service.Id, DeviceId: instance.Id, Value: value})
+	envelope := Envelope{ServiceId: service.Id, DeviceId: instance.Id, Value: value}
+	if err := envelope.Validate(); err != nil {
+		return protocolTopic, message, err
+	}
+	msg, err := json.Marshal(envelope)
 	return protocolTopic, string(msg), err
 }
 

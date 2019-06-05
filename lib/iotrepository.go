@@ -49,7 +49,7 @@ func NewIot(url string) (*Iot){
 
 func (this *Iot) GetDeviceInstance(token JwtImpersonate, deviceInstanceId string) (result model.DeviceInstance, err error) {
 	if err = this.CheckExecutionAccess(token, deviceInstanceId); err == nil {
-		result, err := this.getDeviceFromCache(deviceInstanceId)
+		result, err = this.getDeviceFromCache(deviceInstanceId)
 		if err != nil {
 			err = token.GetJSON(this.url+"/devices/"+url.QueryEscape(deviceInstanceId), &result)
 		}
