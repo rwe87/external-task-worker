@@ -1,4 +1,4 @@
-module github.com/SmartEnergyPlatform/external-task-worker
+module github.com/SENERGY-Platform/external-task-worker
 
 require (
 	github.com/Shopify/sarama v1.22.0
