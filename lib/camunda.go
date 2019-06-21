@@ -27,11 +27,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/lib/messages"
-	"github.com/SmartEnergyPlatform/formatter-lib"
-	"github.com/SmartEnergyPlatform/iot-device-repository/lib/model"
+	"github.com/SENERGY-Platform/external-task-worker/lib/messages"
+	"github.com/SENERGY-Platform/formatter-lib"
+	"github.com/SENERGY-Platform/iot-device-repository/lib/model"
 )
 
 const CAMUNDA_VARIABLES_PAYLOAD = "payload"

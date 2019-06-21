@@ -19,10 +19,10 @@ package lib
 import (
 	"log"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/lib/messages"
+	"github.com/SENERGY-Platform/external-task-worker/lib/messages"
 
 	"github.com/satori/go.uuid"
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 	"github.com/SmartEnergyPlatform/util/http/request"
 )
 

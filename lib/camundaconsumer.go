@@ -20,7 +20,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 )
 
 func CamundaWorker() {

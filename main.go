@@ -25,8 +25,8 @@ import (
 	"syscall"
 
 	"github.com/Shopify/sarama"
-	"github.com/SmartEnergyPlatform/external-task-worker/lib"
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/lib"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 )
 
 func main() {

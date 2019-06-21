@@ -16,7 +16,7 @@
 
 package messages
 
-import "github.com/SmartEnergyPlatform/iot-device-repository/lib/model"
+import "github.com/SENERGY-Platform/iot-device-repository/lib/model"
 
 type BpmnAbstractMsg struct {
 	TaskId     string                  `json:"-"`

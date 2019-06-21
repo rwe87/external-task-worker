@@ -27,7 +27,7 @@ import (
 	"log"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 )
 
 type RoleMapping struct {

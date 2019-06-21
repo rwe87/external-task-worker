@@ -19,7 +19,7 @@ package lib
 import (
 	"log"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
+	"github.com/SENERGY-Platform/external-task-worker/util"
 
 	"time"
 

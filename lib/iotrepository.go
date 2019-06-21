@@ -18,14 +18,15 @@ package lib
 
 import (
 	"encoding/json"
+	"github.com/SENERGY-Platform/iot-device-repository/lib/model"
 	"log"
 	"net/url"
 	"sync"
 
 	"errors"
 
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
-	"github.com/SmartEnergyPlatform/iot-device-repository/lib/model"
+	"github.com/SENERGY-Platform/external-task-worker/util"
+
 )
 
 type Iot struct {

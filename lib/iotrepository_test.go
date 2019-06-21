@@ -19,8 +19,8 @@ package lib
 
 import (
 	"encoding/json"
-	"github.com/SmartEnergyPlatform/external-task-worker/util"
-	"github.com/SmartEnergyPlatform/iot-device-repository/lib/model"
+	"github.com/SENERGY-Platform/external-task-worker/util"
+	"github.com/SENERGY-Platform/iot-device-repository/lib/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
