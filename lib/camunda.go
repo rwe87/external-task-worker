@@ -36,11 +36,6 @@ import (
 
 const CAMUNDA_VARIABLES_PAYLOAD = "payload"
 
-func trackTime(start time.Time, name string)  {
-	elapsed := time.Since(start)
-	log.Printf("%s took %s", name, elapsed)
-}
-
 func ExecuteNextCamundaTask() (wait bool) {
 	tasks, err := GetCamundaTask()
 	if err != nil {
@@ -212,7 +207,7 @@ func setPayloadParameter(msg *messages.BpmnMsg, parameter map[string]interface{}
 }
 
 func ExecuteCamundaTask(task messages.CamundaTask) {
-	defer trackTime(time.Now(), "ExecuteCamundaTask")
+	log.Println("Start", task.Id,time.Now().Second())
 	log.Println("Get new Task: ", task)
 	if task.Error != "" {
 		log.Println("WARNING: existing failure in camunda task", task.Error)
@@ -335,6 +330,7 @@ func CompleteCamundaTask(msg string) (err error) {
 		return err
 	}
 	err = completeCamundaTask(nrMsg.TaskId, nrMsg.WorkerId, nrMsg.OutputName, response)
+	log.Println("Complete", nrMsg.TaskId, time.Now().Second())
 	return
 }
 
