@@ -36,7 +36,13 @@ import (
 
 const CAMUNDA_VARIABLES_PAYLOAD = "payload"
 
+func trackTime(start time.Time, name string)  {
+	elapsed := time.Since(start)
+	log.Printf("%s took %s", name, elapsed.Seconds())
+}
+
 func ExecuteNextCamundaTask() (wait bool) {
+	trackTime(time.Now(), "ExecuteNextCamundaTask")
 	tasks, err := GetCamundaTask()
 	if err != nil {
 		log.Println("error on ExecuteNextCamundaTask getTask", err)
