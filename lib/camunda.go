@@ -212,7 +212,7 @@ func setPayloadParameter(msg *messages.BpmnMsg, parameter map[string]interface{}
 }
 
 func ExecuteCamundaTask(task messages.CamundaTask) {
-	trackTime(time.Now(), "ExecuteCamundaTask")
+	defer trackTime(time.Now(), "ExecuteCamundaTask")
 	log.Println("Get new Task: ", task)
 	if task.Error != "" {
 		log.Println("WARNING: existing failure in camunda task", task.Error)
