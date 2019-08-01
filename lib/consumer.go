@@ -80,8 +80,6 @@ func InitConsumer() {
 					err = CompleteCamundaTask(string(msg.Value))
 					if err != nil {
 						log.Println("error while processing kafka message", err, string(msg.Value))
-					} else {
-						consumer.CommitUpto(msg)
 					}
 				}
 				timeout = false
