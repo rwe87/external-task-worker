@@ -18,6 +18,7 @@ package lib
 
 import (
 	"log"
+	"runtime/debug"
 
 	"github.com/SENERGY-Platform/external-task-worker/util"
 
@@ -83,7 +84,11 @@ func InitConsumer() {
 					}
 				}
 				timeout = false
-				consumer.CommitUpto(msg)
+				err = consumer.CommitUpto(msg)
+				if err != nil {
+					log.Println("ERROR: ", err)
+					debug.PrintStack()
+				}
 			}
 		}
 	}
