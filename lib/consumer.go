@@ -17,83 +17,198 @@
 package lib
 
 import (
+	"context"
+	"errors"
+	"github.com/segmentio/kafka-go"
+	"io"
+	"io/ioutil"
 	"log"
-	"runtime/debug"
+	"sync"
 
 	"github.com/SENERGY-Platform/external-task-worker/util"
 
 	"time"
 
-	"github.com/wvanbergen/kafka/consumergroup"
-	kazoo "github.com/wvanbergen/kazoo-go"
+	"github.com/wvanbergen/kazoo-go"
 )
 
-func InitConsumer() {
-	defer CloseProducer()
-	Produce(util.Config.ResponseTopic, "topic_init")
 
-	zk, chroot := kazoo.ParseConnectionString(util.Config.ZookeeperUrl)
-	kafkaconf := consumergroup.NewConfig()
-	kafkaconf.Consumer.Return.Errors = util.Config.FatalKafkaErrors == "true"
-	kafkaconf.Zookeeper.Chroot = chroot
-	consumerGroupName := util.Config.KafkaConsumerGroup
-	consumer, err := consumergroup.JoinConsumerGroup(
-		consumerGroupName,
-		[]string{util.Config.ResponseTopic},
-		zk,
-		kafkaconf)
+func NewConsumer(zk string, groupid string, topic string, listener func(topic string, msg []byte) error, errorhandler func(err error, consumer *Consumer)) (consumer *Consumer, err error) {
+	consumer = &Consumer{groupId: groupid, zkUrl: zk, topic: topic, listener: listener, errorhandler: errorhandler}
+	err = consumer.start()
+	return
+}
 
+type Consumer struct {
+	count        int
+	zkUrl        string
+	groupId      string
+	topic        string
+	ctx          context.Context
+	cancel       context.CancelFunc
+	listener     func(topic string, msg []byte) error
+	errorhandler func(err error, consumer *Consumer)
+	mux          sync.Mutex
+}
+
+func (this *Consumer) Stop() {
+	this.cancel()
+}
+
+func (this *Consumer) start() error {
+	log.Println("DEBUG: consume topic: \"" + this.topic + "\"")
+	this.ctx, this.cancel = context.WithCancel(context.Background())
+	broker, err := GetBroker(this.zkUrl)
 	if err != nil {
-		log.Fatal("error in consumergroup.JoinConsumerGroup()", err)
+		log.Println("ERROR: unable to get broker list", err)
+		return err
 	}
-
-	defer consumer.Close()
-
-	kafkaTimeout := util.Config.KafkaTimeout
-	useTimeout := true
-	if kafkaTimeout <= 0 {
-		useTimeout = false
-		kafkaTimeout = 3600
+	err = InitTopic(this.zkUrl, this.topic)
+	if err != nil {
+		log.Println("ERROR: unable to create topic", err)
+		return err
 	}
-	kafkaping := time.NewTicker(time.Second * time.Duration(kafkaTimeout/2))
-	kafkatimout := time.NewTicker(time.Second * time.Duration(kafkaTimeout))
-
-	timeout := false
-
-	for {
-		select {
-		case <-kafkaping.C:
-			if useTimeout && timeout {
-				Produce(util.Config.ResponseTopic, "topic_init")
-			}
-		case <-kafkatimout.C:
-			if useTimeout && timeout {
-				log.Fatal("ERROR: kafka missing ping timeout")
-			}
-			timeout = true
-		case errMsg := <-consumer.Errors():
-			log.Fatal("kafka consumer error: ", errMsg)
-		case msg, ok := <-consumer.Messages():
-			if !ok {
-				log.Fatal("empty kafka consumer")
-			} else {
-				if string(msg.Value) != "topic_init" {
-					if time.Since(msg.Timestamp) >= time.Duration(util.Config.CamundaFetchLockDuration)*time.Millisecond {
-						log.Println("DEBUG: message older then CamundaFetchLockDuration -> ignore", msg.Timestamp, string(msg.Value))
-					}else{
-						err = CompleteCamundaTask(string(msg.Value))
+	r := kafka.NewReader(kafka.ReaderConfig{
+		CommitInterval: 0, //synchronous commits
+		Brokers:        broker,
+		GroupID:        this.groupId,
+		Topic:          this.topic,
+		MaxWait:        1 * time.Second,
+		Logger:         log.New(ioutil.Discard, "", 0),
+		ErrorLogger:    log.New(ioutil.Discard, "", 0),
+	})
+	go func() {
+		for {
+			select {
+			case <-this.ctx.Done():
+				log.Println("close kafka reader ", this.topic)
+				return
+			default:
+				m, err := r.FetchMessage(this.ctx)
+				if err == io.EOF || err == context.Canceled {
+					log.Println("close consumer for topic ", this.topic)
+					return
+				}
+				if err != nil {
+					log.Println("ERROR: while consuming topic ", this.topic, err)
+					this.errorhandler(err, this)
+					return
+				}
+				if time.Now().Sub(m.Time) > time.Duration(util.Config.CamundaFetchLockDuration)*time.Millisecond {
+					log.Println("DEBUG: kafka message older than CamundaFetchLockDuration --> ignore:", m.Time, string(m.Value))
+					err = r.CommitMessages(this.ctx, m)
+					if err != nil {
+						log.Println("ERROR: while committing message ", this.topic, err, string(m.Value))
+						this.errorhandler(err, this)
+						return
+					}
+				} else {
+					err = this.listener(m.Topic, m.Value)
+					if err != nil {
+						log.Println("ERROR: unable to handle message (no commit)", err, string(m.Value))
+					} else {
+						err = r.CommitMessages(this.ctx, m)
 						if err != nil {
-							log.Println("error while processing kafka message", err, string(msg.Value))
+							log.Println("ERROR: while committing message ", this.topic, err, string(m.Value))
+							this.errorhandler(err, this)
+							return
 						}
 					}
 				}
-				timeout = false
-				err = consumer.CommitUpto(msg)
-				if err != nil {
-					log.Println("ERROR: ", err)
-					debug.PrintStack()
-				}
 			}
 		}
+	}()
+	return err
+}
+
+func (this *Consumer) Restart() {
+	this.Stop()
+	this.start()
+}
+
+
+func GetBroker(zk string) (brokers []string, err error) {
+	return getBroker(zk)
+}
+
+func getBroker(zkUrl string) (brokers []string, err error) {
+	zookeeper := kazoo.NewConfig()
+	zookeeper.Logger = log.New(ioutil.Discard, "", 0)
+	zk, chroot := kazoo.ParseConnectionString(zkUrl)
+	zookeeper.Chroot = chroot
+	if kz, err := kazoo.NewKazoo(zk, zookeeper); err != nil {
+		return brokers, err
+	} else {
+		defer kz.Close()
+		return kz.BrokerList()
+	}
+}
+
+func GetKafkaController(zkUrl string) (controller string, err error) {
+	zookeeper := kazoo.NewConfig()
+	zookeeper.Logger = log.New(ioutil.Discard, "", 0)
+	zk, chroot := kazoo.ParseConnectionString(zkUrl)
+	zookeeper.Chroot = chroot
+	kz, err := kazoo.NewKazoo(zk, zookeeper)
+	if err != nil {
+		return controller, err
+	}
+	controllerId, err := kz.Controller()
+	if err != nil {
+		return controller, err
+	}
+	brokers, err := kz.Brokers()
+	kz.Close()
+	if err != nil {
+		return controller, err
+	}
+	return brokers[controllerId], err
+}
+
+func InitTopic(zkUrl string, topics ...string) (err error) {
+	return InitTopicWithConfig(zkUrl, 1, 1, topics...)
+}
+
+func InitTopicWithConfig(zkUrl string, numPartitions int, replicationFactor int, topics ...string) (err error) {
+	controller, err := GetKafkaController(zkUrl)
+	if err != nil {
+		log.Println("ERROR: unable to find controller", err)
+		return err
+	}
+	if controller == "" {
+		log.Println("ERROR: unable to find controller")
+		return errors.New("unable to find controller")
+	}
+	initConn, err := kafka.Dial("tcp", controller)
+	if err != nil {
+		log.Println("ERROR: while init topic connection ", err)
+		return err
+	}
+	defer initConn.Close()
+	for _, topic := range topics {
+		err = initConn.CreateTopics(kafka.TopicConfig{
+			Topic:             topic,
+			NumPartitions:     numPartitions,
+			ReplicationFactor: replicationFactor,
+		})
+		if err != nil {
+			return
+		}
+	}
+	return nil
+}
+
+var consumer *Consumer
+
+func InitConsumer() {
+	var err error
+	consumer, err = NewConsumer(util.Config.ZookeeperUrl, util.Config.KafkaConsumerGroup, util.Config.ResponseTopic, func(topic string, msg []byte) error {
+		return CompleteCamundaTask(string(msg))
+	}, func(err error, consumer *Consumer) {
+		log.Println("FATAL ERROR: kafka", err)
+		log.Fatal(err)
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
 }
