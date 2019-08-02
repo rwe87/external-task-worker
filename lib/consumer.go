@@ -78,9 +78,13 @@ func InitConsumer() {
 				log.Fatal("empty kafka consumer")
 			} else {
 				if string(msg.Value) != "topic_init" {
-					err = CompleteCamundaTask(string(msg.Value))
-					if err != nil {
-						log.Println("error while processing kafka message", err, string(msg.Value))
+					if time.Since(msg.Timestamp) >= time.Duration(util.Config.CamundaFetchLockDuration)*time.Millisecond {
+						log.Println("DEBUG: message older then CamundaFetchLockDuration -> ignore", msg.Timestamp, string(msg.Value))
+					}else{
+						err = CompleteCamundaTask(string(msg.Value))
+						if err != nil {
+							log.Println("error while processing kafka message", err, string(msg.Value))
+						}
 					}
 				}
 				timeout = false
