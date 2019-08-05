@@ -1,6 +1,6 @@
 {
   "DeviceRepoUrl": "http://iot:8080",
-  "CamundaWorkerTimeout": 300000,
+  "CamundaWorkerTimeout": 100,
   "CamundaWorkerTasks": 10,
   "CamundaAsyncResponseTimeout": 360000,
   "CamundaFetchLockDuration": 10000,
