@@ -36,7 +36,7 @@ type CamundaTask struct {
 	ProcessInstanceId   string                     `json:"processInstanceId"`
 	ProcessDefinitionId string                     `json:"processDefinitionId"`
 	TenantId            string                     `json:"tenantId"`
-	Error				string					   `json:"errorMessage"`
+	Error               string                     `json:"errorMessage"`
 }
 
 type CamundaTopic struct {
@@ -45,8 +45,9 @@ type CamundaTopic struct {
 }
 
 type CamundaFetchRequest struct {
-	WorkerId string         `json:"workerId,omitempty"`
-	MaxTasks int64          `json:"maxTasks,omitempty"`
+	WorkerId string `json:"workerId,omitempty"`
+	MaxTasks int64  `json:"maxTasks,omitempty"`
+	AsyncResponseTimeout int64 `json:"asyncResponseTimeout,omitempty"`
 	Topics   []CamundaTopic `json:"topics,omitempty"`
 }
 
