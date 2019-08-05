@@ -1,6 +1,6 @@
 {
     "DeviceRepoUrl": "http://iot:8080",
-    "CamundaWorkerTimeout": 1000,
+    "CamundaWorkerTimeout": 100,
     "CamundaWorkerTasks": 10,
     "CamundaFetchLockDuration": 10000,
     "CamundaUrl": "http://camunda:8082/engine-rest",
