@@ -47,7 +47,6 @@ type CamundaTopic struct {
 type CamundaFetchRequest struct {
 	WorkerId string `json:"workerId,omitempty"`
 	MaxTasks int64  `json:"maxTasks,omitempty"`
-	AsyncResponseTimeout int64 `json:"asyncResponseTimeout,omitempty"`
 	Topics   []CamundaTopic `json:"topics,omitempty"`
 }
 

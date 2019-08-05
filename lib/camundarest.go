@@ -32,7 +32,6 @@ func GetCamundaTask() (tasks []messages.CamundaTask, err error) {
 	fetchRequest := messages.CamundaFetchRequest{
 		WorkerId: workerId,
 		MaxTasks: util.Config.CamundaWorkerTasks,
-		AsyncResponseTimeout: util.Config.CamundaAsyncResponseTimeout,
 		Topics:   []messages.CamundaTopic{{LockDuration: util.Config.CamundaFetchLockDuration, Name: util.Config.CamundaTopic}},
 	}
 	err, _, _ = request.Post(util.Config.CamundaUrl+"/external-task/fetchAndLock", fetchRequest, &tasks)
