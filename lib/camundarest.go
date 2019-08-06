@@ -60,16 +60,16 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 	log.Println("outputName: ", outputName)
 	log.Println("output: ", output)
 
-	/*	if outputName != "" && output.InstanceId != "" {
+	if util.Config.CompletionStrategy == "pessimistic" {
 		variables := map[string]messages.CamundaOutput{
 			outputName: {
 				Value: output,
 			},
 		}
 		completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId, Variables: variables}
-	} else {*/
-	completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId}
-	//}
+	} else {
+		completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId}
+	}
 
 	pl := ""
 	var code int

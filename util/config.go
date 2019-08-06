@@ -29,6 +29,7 @@ import (
 
 type ConfigStruct struct {
 	DeviceRepoUrl               string
+	CompletionStrategy          string
 	CamundaWorkerTimeout        int64
 	CamundaWorkerTasks          int64
 	CamundaAsyncResponseTimeout int64

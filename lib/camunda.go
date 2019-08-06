@@ -207,7 +207,7 @@ func setPayloadParameter(msg *messages.BpmnMsg, parameter map[string]interface{}
 }
 
 func ExecuteCamundaTask(task messages.CamundaTask) {
-	log.Println("Start", task.Id,time.Now().Second())
+	log.Println("Start", task.Id, time.Now().Second())
 	log.Println("Get new Task: ", task)
 	if task.Error != "" {
 		log.Println("WARNING: existing failure in camunda task", task.Error)
@@ -233,12 +233,15 @@ func ExecuteCamundaTask(task messages.CamundaTask) {
 		SetCamundaRetry(task.Id)
 	}
 	Produce(protocolTopic, message)
-	err = completeCamundaTask(task.Id, "", "", messages.BpmnMsg{})
-	if err != nil {
-		log.Println("error on completeCamundaTask(): ", err)
-		return
-	} else {
-		log.Println("Completed task optimistic.")
+
+	if util.Config.CompletionStrategy == "optimistic" {
+		err = completeCamundaTask(task.Id, "", "", messages.BpmnMsg{})
+		if err != nil {
+			log.Println("error on completeCamundaTask(): ", err)
+			return
+		} else {
+			log.Println("Completed task optimistic.")
+		}
 	}
 }
 
@@ -376,4 +379,3 @@ func createBpmnResponse(nrMsg messages.ProtocolMsg) (result messages.BpmnMsg, er
 	}
 	return
 }
-
