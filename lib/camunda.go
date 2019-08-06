@@ -233,6 +233,13 @@ func ExecuteCamundaTask(task messages.CamundaTask) {
 		SetCamundaRetry(task.Id)
 	}
 	Produce(protocolTopic, message)
+	err = completeCamundaTask(task.Id, "", "", messages.BpmnMsg{})
+	if err != nil {
+		log.Println("error on completeCamundaTask(): ", err)
+		return
+	} else {
+		log.Println("Completed task optimistic.")
+	}
 }
 
 type Envelope struct {
