@@ -57,16 +57,19 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 		workerId = GetWorkerId()
 	}
 
-	if outputName != "" && output.InstanceId != "" {
+	log.Println("outputName: ", outputName)
+	log.Println("output: ", output)
+
+	/*	if outputName != "" && output.InstanceId != "" {
 		variables := map[string]messages.CamundaOutput{
 			outputName: {
 				Value: output,
 			},
 		}
 		completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId, Variables: variables}
-	} else {
-		completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId}
-	}
+	} else {*/
+	completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId}
+	//}
 
 	pl := ""
 	var code int
