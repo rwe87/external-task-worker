@@ -72,7 +72,7 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 	pl := ""
 	var code int
 	log.Println("Start complete Request")
-	time.Sleep(100 * time.Millisecond)
+	time.Sleep(1 * time.Second)
 	err, pl, code = request.Post(util.Config.CamundaUrl+"/external-task/"+taskId+"/complete", completeRequest, nil)
 	if code == 204 || code == 200 {
 		log.Println("complete camunda task: ", completeRequest, pl)
