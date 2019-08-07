@@ -57,9 +57,6 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 		workerId = GetWorkerId()
 	}
 
-	log.Println("outputName: ", outputName)
-	log.Println("output: ", output)
-
 	if util.Config.CompletionStrategy == "pessimistic" {
 		variables := map[string]messages.CamundaOutput{
 			outputName: {
@@ -73,11 +70,13 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 
 	pl := ""
 	var code int
+	log.Println("Start complete Request")
 	err, pl, code = request.Post(util.Config.CamundaUrl+"/external-task/"+taskId+"/complete", completeRequest, nil)
 	if code == 204 || code == 200 {
 		log.Println("complete camunda task: ", completeRequest, pl)
 	} else {
 		CamundaError(messages.CamundaTask{Id: taskId}, pl)
+		log.Println("Error on completeCamundaTask.")
 	}
 	return
 }
