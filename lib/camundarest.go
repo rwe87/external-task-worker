@@ -18,6 +18,7 @@ package lib
 
 import (
 	"log"
+	"time"
 
 	"github.com/SENERGY-Platform/external-task-worker/lib/messages"
 
@@ -71,6 +72,7 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 	pl := ""
 	var code int
 	log.Println("Start complete Request")
+	time.Sleep(100 * time.Millisecond)
 	err, pl, code = request.Post(util.Config.CamundaUrl+"/external-task/"+taskId+"/complete", completeRequest, nil)
 	if code == 204 || code == 200 {
 		log.Println("complete camunda task: ", completeRequest, pl)
