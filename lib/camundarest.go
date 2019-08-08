@@ -19,6 +19,7 @@ package lib
 import (
 	"github.com/SENERGY-Platform/external-task-worker/lib/messages"
 	"log"
+	"time"
 
 	"github.com/SENERGY-Platform/external-task-worker/util"
 	"github.com/SmartEnergyPlatform/util/http/request"
@@ -66,6 +67,10 @@ func completeCamundaTask(taskId string, workerId string, outputName string, outp
 	} else {
 		completeRequest = messages.CamundaCompleteRequest{WorkerId: workerId}
 	}
+
+	duration := time.Duration(util.Config.OptimisticTaskCompletionTimeout) * time.Millisecond
+
+	time.Sleep(duration)
 
 	pl := ""
 	var code int
